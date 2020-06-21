@@ -1,19 +1,44 @@
-var express = require('express');
-var socket = require('socket.io');
+const express = require('express');
+const socket = require('socket.io');
+const app = express();
 const mongoose = require('mongoose');
+const db = mongoose.connection;
+const bodyParser = require('body-parser');
 require('dotenv/config');
 
-//Setup
-var app = express();
+app.use(bodyParser.json());
+
+// Import Routes
+const registerRoute = require('./routes/register');
+app.use('/register', registerRoute);
+
+const loginRoute = require('./routes/login');
+app.use('/login', loginRoute);
+
+const messageRoute = require('./routes/message');
+app.use('/message', messageRoute);
+
+// Application setup
 var server = app.listen(process.env.PORT, function() {
     console.log('Listening to http://localhost:3000');
 })
-mongoose.connect(
-    process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true },
-    () => console.log('connected to DB!')
-);
 
-//Serving static files
+// Database setup
+mongoose.connect(
+    process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }
+);
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    console.log('connected to DB!');
+});
+
+// Routes
+app.get('/', (req, res) => {
+    res.send('Homepage');
+})
+
+
+// Serving static files
 app.use(express.static('public'));
 
 var io = socket(server);
