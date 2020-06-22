@@ -34,9 +34,7 @@ db.once('open', function() {
 });
 
 // Routes
-app.get('/', (req, res) => {
-    res.send('Homepage');
-})
+
 
 
 // Serving static files
