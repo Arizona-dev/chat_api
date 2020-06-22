@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const Message = require('../models/Message');
+const verify = require('./verifyToken');
 
 // Find all messages
-router.get('/', async(req, res) => {
+router.get('/', verify, async(req, res) => {
     try {
         const messages = await Message.find();
-        res.status(200).json(messages);
+        res.status(200).send(messages);
     } catch (err) {
-        res.status(500).json({ message: err });
+        res.status(500).send(err);
     }
 });
 
@@ -20,7 +21,7 @@ router.get('/:authorId&:receiverId', async(req, res) => {
         })
         res.status(200).json(message);
     } catch (err) {
-        res.status(500).json({ message: err });
+        res.status(500).send(err);
     }
 
 })
@@ -38,7 +39,7 @@ router.post('/', async(req, res) => {
         const savedMessage = await message.save()
         res.status(201).json(savedMessage);
     } catch (err) {
-        res.status(500).json({ message: err });
+        res.status(500).send(err);
     }
 });
 
@@ -46,9 +47,9 @@ router.post('/', async(req, res) => {
 router.delete('/:messageId', async(req, res) => {
     try {
         const removedMessage = await Message.deleteOne({ _id: req.params.messageId });
-        res.status(200).json({ message: removedMessage });
+        res.status(200).send(removedMessage);
     } catch (err) {
-        res.status(500).json({ message: err });
+        res.status(500).send(err);
     }
 
 });
