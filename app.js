@@ -10,14 +10,12 @@ require('dotenv/config');
 app.use(bodyParser.json());
 
 // Import Routes
-const registerRoute = require('./routes/register');
-app.use('/register', registerRoute);
-
-const loginRoute = require('./routes/login');
-app.use('/login', loginRoute);
-
+const authRoute = require('./routes/auth');
 const messageRoute = require('./routes/message');
-app.use('/message', messageRoute);
+
+// Route Middlewares
+app.use('/api/user', authRoute);
+app.use('/api/message', messageRoute);
 
 // Application setup
 var server = app.listen(process.env.PORT, function() {
