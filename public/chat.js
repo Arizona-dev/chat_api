@@ -12,9 +12,9 @@ var message = document.getElementById('message'),
 // Emit events
 btn.addEventListener('click', function() {
     socket.emit('chat', {
-        message: message.value,
+        content: message.value,
         handle: handle.value,
-        date: Date.now()
+        timestamp: Date.now()
     });
     message.value = "";
 });
@@ -22,9 +22,9 @@ btn.addEventListener('click', function() {
 this.addEventListener('keyup', function(event) {
     if (event.keyCode === 13 && checkMessageEmpty(message.value) == false) {
         socket.emit('chat', {
-            message: message.value,
+            content: message.value,
             handle: handle.value,
-            date: Date.now()
+            timestamp: Date.now()
         });
         message.value = "";
     }
@@ -61,7 +61,7 @@ socket.on('chat', function(data) {
 });
 
 function getMessages(data) {
-    output.innerHTML += '<div class="msgbloc"><p><strong>' + data.handle + '</strong><p1>' + checkDateTime(data.date) + '</p1></p><pm>' + data.message + '</pm></div>';
+    output.innerHTML += '<div class="msgbloc"><p><strong>' + data.handle + '</strong><p1>' + checkDateTime(data.timestamp) + '</p1></p><pm>' + data.content + '</pm></div>';
     output.scrollTop = output.scrollHeight;
 }
 
